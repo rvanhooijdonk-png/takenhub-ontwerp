@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Takenhub indelingen</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --grond:#F4F6F3; --vlak:#FFFFFF; --inkt:#1A1F1C; --zacht:#5C665F; --stil:#8B948D;
+  --lijn:#DADFD9; --accent:#1F5F4A; --accent-zacht:#E3EFE9; --let-op:#B4491F; --let-op-zacht:#F8E9E1;
+  --wacht:#6B5A1E; --wacht-zacht:#F3EDD6;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --grond:#121614; --vlak:#1B211E; --inkt:#E9EEEA; --zacht:#A9B3AC; --stil:#7D877F;
+    --lijn:#2E3732; --accent:#6FC3A2; --accent-zacht:#1F3A30; --let-op:#F0916A; --let-op-zacht:#3A2219;
+    --wacht:#D9C16B; --wacht-zacht:#33301B;
+  }
+}
+:root[data-theme="dark"]{
+  --grond:#121614; --vlak:#1B211E; --inkt:#E9EEEA; --zacht:#A9B3AC; --stil:#7D877F;
+  --lijn:#2E3732; --accent:#6FC3A2; --accent-zacht:#1F3A30; --let-op:#F0916A; --let-op-zacht:#3A2219;
+  --wacht:#D9C16B; --wacht-zacht:#33301B;
+}
+*{box-sizing:border-box}
+body{background:var(--grond);color:var(--inkt);font-family:var(--sans);font-size:15px;line-height:1.5;
+  padding-inline:20px;padding-block:28px 60px}
+.pagina{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1{font-size:26px;font-weight:600;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:17px;font-weight:600;margin:0}
+p{margin:0;max-width:68ch;color:var(--zacht)}
+.kop{display:flex;flex-direction:column;gap:8px}
+.oog{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--stil)}
+
+/* keuzebalk */
+.keuze{display:flex;flex-wrap:wrap;gap:8px}
+.keuze button{font:inherit;font-weight:500;padding:9px 16px;border-radius:8px;border:1px solid var(--lijn);
+  background:var(--vlak);color:var(--zacht);cursor:pointer}
+.keuze button[aria-selected="true"]{background:var(--inkt);color:var(--grond);border-color:var(--inkt)}
+.keuze button:focus-visible,.taak:focus-visible,summary:focus-visible,.nav button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.uitleg{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.uitleg div{border-top:2px solid var(--lijn);padding-top:10px;display:flex;flex-direction:column;gap:4px}
+.uitleg strong{font-size:13px;font-weight:600}
+.uitleg span{font-size:14px;color:var(--zacht)}
+
+/* schermkader */
+.kader{background:var(--vlak);border:1px solid var(--lijn);border-radius:12px;overflow:hidden}
+.balk{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--lijn);
+  font-family:var(--mono);font-size:12px;color:var(--stil)}
+.balk i{width:9px;height:9px;border-radius:50%;background:var(--lijn);display:inline-block}
+.scherm{padding:22px;display:flex;flex-direction:column;gap:18px}
+
+/* gedeelde onderdelen */
+.invoer{display:flex;gap:8px;align-items:stretch}
+.invoer .veld{flex:1;border:1px solid var(--lijn);border-radius:8px;padding:11px 13px;color:var(--stil);
+  background:var(--grond);min-width:0}
+.invoer .toets{font-family:var(--mono);font-size:12px;border:1px solid var(--lijn);border-radius:8px;
+  padding:0 12px;display:flex;align-items:center;color:var(--zacht);white-space:nowrap}
+.hint{font-size:13px;color:var(--stil)}
+.blok{display:flex;flex-direction:column;gap:2px}
+.blokkop{display:flex;justify-content:space-between;align-items:baseline;padding:0 2px 6px;
+  border-bottom:1px solid var(--lijn);margin-bottom:2px}
+.blokkop b{font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.blokkop span{font-family:var(--mono);font-size:12px;color:var(--stil)}
+.taak{display:flex;gap:11px;align-items:flex-start;padding:9px 6px;border-radius:7px;cursor:pointer;
+  border:0;background:none;width:100%;text-align:left;font:inherit;color:inherit}
+.taak:hover{background:var(--grond)}
+.taak .vink{flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--stil);margin-top:2px}
+.taak.klaar .vink{background:var(--accent);border-color:var(--accent)}
+.taak.klaar .t{text-decoration:line-through;color:var(--stil)}
+.taak .t{flex:1;min-width:0}
+.taak .m{font-family:var(--mono);font-size:12px;color:var(--stil);white-space:nowrap;margin-top:3px}
+.pil{font-size:12px;font-weight:500;padding:1px 8px;border-radius:99px;white-space:nowrap}
+.pil.laat{background:var(--let-op-zacht);color:var(--let-op)}
+.pil.wacht{background:var(--wacht-zacht);color:var(--wacht)}
+.pil.mail{background:var(--accent-zacht);color:var(--accent)}
+details.dag{border-bottom:1px solid var(--lijn)}
+details.dag > summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;
+  padding:10px 4px;font-weight:500}
+details.dag > summary::-webkit-details-marker{display:none}
+details.dag > summary span{font-family:var(--mono);font-size:12px;color:var(--stil)}
+details.dag[open] > summary{color:var(--accent)}
+
+/* A - één kolom */
+.a-rooster{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:26px}
+.a-zij{display:flex;flex-direction:column;gap:14px}
+.teller{border:1px solid var(--lijn);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.teller .rij{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.teller .rij span:last-child{font-family:var(--mono);color:var(--stil)}
+
+/* B - drie banen */
+.b-banen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.baan{background:var(--grond);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.baan .kaart{background:var(--vlak);border:1px solid var(--lijn);border-radius:8px;padding:10px 11px;
+  display:flex;flex-direction:column;gap:5px}
+.baan .kaart .onder{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-family:var(--mono);font-size:12px;color:var(--stil)}
+
+/* C - lijst en detail */
+.c-rooster{display:grid;grid-template-columns:170px minmax(0,1fr) minmax(0,1.15fr);min-height:430px}
+.nav{border-right:1px solid var(--lijn);padding:14px 10px;display:flex;flex-direction:column;gap:2px}
+.nav button{font:inherit;text-align:left;border:0;background:none;color:var(--zacht);padding:8px 10px;
+  border-radius:7px;cursor:pointer;display:flex;justify-content:space-between;gap:8px}
+.nav button[aria-current="true"]{background:var(--accent-zacht);color:var(--accent);font-weight:500}
+.nav button span{font-family:var(--mono);font-size:12px}
+.c-lijst{border-right:1px solid var(--lijn);padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.c-detail{padding:20px 22px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.c-detail h3{margin:0;font-size:20px;font-weight:600;text-wrap:balance}
+.veldrij{display:grid;grid-template-columns:96px 1fr;gap:6px 12px;font-size:14px}
+.veldrij dt{color:var(--stil)} .veldrij dd{margin:0}
+.knoppen{display:flex;flex-wrap:wrap;gap:8px}
+.knoppen span{font-size:13px;font-weight:500;border:1px solid var(--lijn);border-radius:7px;padding:6px 11px}
+.knoppen span.hoofd{background:var(--accent);border-color:var(--accent);color:var(--vlak)}
+.taak.gekozen{background:var(--accent-zacht)}
+
+.tabel{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--lijn);vertical-align:top}
+th{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--stil)}
+td.ja{color:var(--accent);font-weight:500} td.nee{color:var(--let-op)}
+.advies{border-left:3px solid var(--accent);padding:4px 0 4px 16px;display:flex;flex-direction:column;gap:6px}
+.advies p{color:var(--inkt)}
+
+@media (max-width:820px){
+  .a-rooster,.b-banen{grid-template-columns:1fr}
+  .c-rooster{grid-template-columns:1fr}
+  .nav{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--lijn)}
+  .c-lijst{border-right:0;border-bottom:1px solid var(--lijn)}
+  .invoer{flex-wrap:wrap}
+}
+@media (prefers-reduced-motion:no-preference){ .taak,.keuze button{transition:background .12s} }
+</style>
+
+</head>
+<body>
+<div class="pagina">
+  <div class="kop">
+    <span class="oog">Takenhub · drie indelingen · voorbeeldgegevens</span>
+    <h1>Welke vorm past bij hoe je werkt?</h1>
+    <p>Drie uitgewerkte schetsen van hetzelfde scherm, alle met dezelfde voorbeeldtaken. Klik op een taak om hem af te vinken en op een dag om hem open te klappen. In alle drie staat de invoer bovenaan, verstuurt Enter een taak, en toont Vandaag echt wat vandaag als datum heeft.</p>
+  </div>
+
+  <div class="keuze" role="tablist" aria-label="Indeling kiezen">
+    <button role="tab" id="tab-a" aria-selected="true" aria-controls="paneel-a">A · Eén kolom</button>
+    <button role="tab" id="tab-b" aria-selected="false" aria-controls="paneel-b">B · Drie banen</button>
+    <button role="tab" id="tab-c" aria-selected="false" aria-controls="paneel-c">C · Lijst met detail</button>
+  </div>
+
+  <!-- A -->
+  <section id="paneel-a" role="tabpanel" aria-labelledby="tab-a">
+    <div class="pagina" style="gap:16px">
+      <div class="uitleg">
+        <div><strong>Idee</strong><span>Eén lijst van boven naar beneden: te laat, vandaag, dan de dagen. Rechts alleen tellers.</span></div>
+        <div><strong>Lost op</strong><span>Je ziet in één blik wat vandaag moet. Geen menu nodig voor het dagelijkse werk.</span></div>
+        <div><strong>Kost</strong><span>Mail en notities zitten één klik verder. Details openen in een paneel over de lijst.</span></div>
+      </div>
+      <div class="kader">
+        <div class="balk"><i></i><i></i><i></i> takenhub · vandaag</div>
+        <div class="scherm">
+          <div>
+            <div class="invoer"><div class="veld">Typ een taak, bijvoorbeeld "morgen Jansen bellen"…</div><div class="toets">Enter = taak</div><div class="toets">⌘N = notitie</div></div>
+            <div class="hint" style="margin-top:6px">Lange of gemengde tekst? Plak hem en kies "laat de AI uitsplitsen" - dat loopt op de achtergrond.</div>
+          </div>
+          <div class="a-rooster">
+            <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+              <div class="blok">
+                <div class="blokkop"><b style="color:var(--let-op)">Te laat</b><span>2</span></div>
+                <button class="taak"><span class="vink"></span><span class="t">Offerte congrescentrum terugsturen</span><span class="pil laat">3 dagen</span></button>
+                <button class="taak"><span class="vink"></span><span class="t">Btw-aangifte derde kwartaal controleren</span><span class="pil laat">1 dag</span></button>
+              </div>
+              <div class="blok">
+                <div class="blokkop"><b>Vandaag · vrijdag 2 oktober</b><span>4 · 2u 10m</span></div>
+                <button class="taak"><span class="vink"></span><span class="t">Outline keynote energietransitie afmaken</span><span class="m">90m</span></button>
+                <button class="taak"><span class="vink"></span><span class="t">Reageren op vraag over datum workshop <span class="pil mail">mail</span></span><span class="m">10m</span></button>
+                <button class="taak"><span class="vink"></span><span class="t">Garage bellen voor de apk</span><span class="m">5m</span></button>
+                <button class="taak klaar"><span class="vink"></span><span class="t">Factuur drukker betalen</span><span class="m">klaar</span></button>
+              </div>
+              <div>
+                <details class="dag"><summary>Morgen <span>2</span></summary>
+                  <button class="taak"><span class="vink"></span><span class="t">Slides bouwcongres nalopen</span><span class="m">60m</span></button>
+                  <button class="taak"><span class="vink"></span><span class="t">Boodschappen voor het weekend</span><span class="m">30m</span></button></details>
+                <details class="dag"><summary>Maandag 5 oktober <span>3</span></summary>
+                  <button class="taak"><span class="vink"></span><span class="t">Voorbespreking lezing gemeente</span><span class="m">45m</span></button>
+                  <button class="taak"><span class="vink"></span><span class="t">Reiskosten september declareren</span><span class="m">20m</span></button>
+                  <button class="taak"><span class="vink"></span><span class="t">Verzekering opzeggen</span><span class="m">10m</span></button></details>
+                <details class="dag"><summary>Dinsdag 6 oktober <span>1</span></summary>
+                  <button class="taak"><span class="vink"></span><span class="t">Paspoort ophalen</span><span class="m">30m</span></button></details>
+                <details class="dag"><summary>Later deze maand <span>6</span></summary>
+                  <button class="taak"><span class="vink"></span><span class="t">Lezing Utrecht voorbereiden</span><span class="m">15 okt</span></button></details>
+              </div>
+            </div>
+            <div class="a-zij">
+              <div class="teller"><h2>Wacht</h2>
+                <div class="rij"><span>Akkoord offerte leverancier</span><span>ma</span></div>
+                <div class="rij"><span>Terugbetaling borg <span class="pil wacht">verlopen</span></span><span>30 sep</span></div></div>
+              <div class="teller"><h2>Mail</h2>
+                <div class="rij"><span>Reactie nodig</span><span>3</span></div>
+                <div class="rij"><span>Geen reactie ontvangen</span><span>2</span></div>
+                <div class="rij"><span>Facturen</span><span>4</span></div></div>
+              <div class="teller"><h2>Notities</h2>
+                <div class="rij"><span>Laatst bewerkt</span><span>gisteren</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- B -->
+  <section id="paneel-b" role="tabpanel" aria-labelledby="tab-b" hidden>
+    <div class="pagina" style="gap:16px">
+      <div class="uitleg">
+        <div><strong>Idee</strong><span>Drie banen naast elkaar: Vandaag, Deze week, Wacht en mail. Je schuift een kaart naar een andere baan.</span></div>
+        <div><strong>Lost op</strong><span>Je ziet de week en het wachtende werk tegelijk. Verzetten is slepen, zonder datumkiezer.</span></div>
+        <div><strong>Kost</strong><span>Op een smal venster staan de banen onder elkaar. Lange lijsten worden onrustig.</span></div>
+      </div>
+      <div class="kader">
+        <div class="balk"><i></i><i></i><i></i> takenhub · week</div>
+        <div class="scherm">
+          <div class="invoer"><div class="veld">Typ een taak…</div><div class="toets">Enter = taak</div><div class="toets">⌘N = notitie</div></div>
+          <div class="b-banen">
+            <div class="baan">
+              <div class="blokkop"><b>Vandaag</b><span>5 · 2u 10m</span></div>
+              <div class="kaart"><span>Offerte congrescentrum terugsturen</span><div class="onder"><span class="pil laat">3 dagen te laat</span></div></div>
+              <div class="kaart"><span>Outline keynote energietransitie afmaken</span><div class="onder">90m</div></div>
+              <div class="kaart"><span>Reageren op vraag over datum workshop</span><div class="onder"><span class="pil mail">mail</span>10m</div></div>
+              <div class="kaart"><span>Garage bellen voor de apk</span><div class="onder">5m</div></div>
+            </div>
+            <div class="baan">
+              <div class="blokkop"><b>Deze week</b><span>6</span></div>
+              <div class="kaart"><span>Slides bouwcongres nalopen</span><div class="onder">za · 60m</div></div>
+              <div class="kaart"><span>Voorbespreking lezing gemeente</span><div class="onder">ma · 45m</div></div>
+              <div class="kaart"><span>Reiskosten september declareren</span><div class="onder">ma · 20m</div></div>
+              <div class="kaart"><span>Paspoort ophalen</span><div class="onder">di · 30m</div></div>
+            </div>
+            <div class="baan">
+              <div class="blokkop"><b>Wacht en mail</b><span>7</span></div>
+              <div class="kaart"><span>Akkoord offerte leverancier</span><div class="onder"><span class="pil wacht">wacht tot ma</span></div></div>
+              <div class="kaart"><span>Terugbetaling borg</span><div class="onder"><span class="pil laat">wachttijd voorbij</span></div></div>
+              <div class="kaart"><span>Vraag over outline van de organisator</span><div class="onder"><span class="pil mail">reactie nodig</span>4 dagen</div></div>
+              <div class="kaart"><span>Opzet lezingen, nog geen antwoord</span><div class="onder"><span class="pil mail">geen reactie</span>9 dagen</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- C -->
+  <section id="paneel-c" role="tabpanel" aria-labelledby="tab-c" hidden>
+    <div class="pagina" style="gap:16px">
+      <div class="uitleg">
+        <div><strong>Idee</strong><span>Zoals een mailprogramma: links vijf vaste plekken, in het midden de lijst, rechts de gekozen taak met al zijn knoppen.</span></div>
+        <div><strong>Lost op</strong><span>Geen panelen die over de lijst schuiven en geen verstopte menu's: afronden, wachten en datum staan altijd rechts.</span></div>
+        <div><strong>Kost</strong><span>Vraagt een breed venster. In het smalle Wave-paneel past alleen de lijst.</span></div>
+      </div>
+      <div class="kader">
+        <div class="balk"><i></i><i></i><i></i> takenhub</div>
+        <div class="c-rooster">
+          <div class="nav">
+            <button aria-current="true">Vandaag <span>6</span></button>
+            <button>Komend <span>12</span></button>
+            <button>Wacht <span>2</span></button>
+            <button>Mail <span>9</span></button>
+            <button>Notities <span>31</span></button>
+            <button style="margin-top:auto;color:var(--stil)">Zoeken en alles</button>
+          </div>
+          <div class="c-lijst">
+            <div class="invoer"><div class="veld">Typ een taak…</div><div class="toets">Enter</div></div>
+            <div class="blok">
+              <div class="blokkop"><b style="color:var(--let-op)">Te laat</b><span>2</span></div>
+              <button class="taak"><span class="vink"></span><span class="t">Offerte congrescentrum terugsturen</span></button>
+              <button class="taak"><span class="vink"></span><span class="t">Btw-aangifte controleren</span></button>
+            </div>
+            <div class="blok">
+              <div class="blokkop"><b>Vandaag</b><span>4</span></div>
+              <button class="taak gekozen"><span class="vink"></span><span class="t">Reageren op vraag over datum workshop</span></button>
+              <button class="taak"><span class="vink"></span><span class="t">Outline keynote afmaken</span></button>
+              <button class="taak"><span class="vink"></span><span class="t">Garage bellen voor de apk</span></button>
+              <button class="taak klaar"><span class="vink"></span><span class="t">Factuur drukker betalen</span></button>
+            </div>
+          </div>
+          <div class="c-detail">
+            <span class="pil mail" style="align-self:flex-start">uit mail</span>
+            <h3>Reageren op vraag over datum workshop</h3>
+            <dl class="veldrij">
+              <dt>Datum</dt><dd>vandaag · geen herhaling</dd>
+              <dt>Duur</dt><dd>10 minuten, geschat</dd>
+              <dt>Aan zet</dt><dd>jij - zij vragen welke dag past</dd>
+              <dt>Herkomst</dt><dd>mail van 30 september</dd>
+            </dl>
+            <div class="knoppen"><span class="hoofd">Klaar</span><span>Morgen</span><span>Wacht op…</span><span>Datum…</span><span>Notitie erbij</span></div>
+            <div class="teller"><h2>Antwoordvoorstel</h2><span style="color:var(--zacht);font-size:14px">Dinsdag 13 oktober past goed. Zal ik die dag vastzetten?</span>
+              <div class="knoppen"><span>Bewerken</span><span>Zet klaar als concept</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="kop">
+    <h2>Naast elkaar</h2>
+    <div class="tabel">
+      <table>
+        <thead><tr><th></th><th>A · Eén kolom</th><th>B · Drie banen</th><th>C · Lijst met detail</th></tr></thead>
+        <tbody>
+          <tr><td>Past in het smalle Wave-paneel</td><td class="ja">ja</td><td class="nee">banen onder elkaar</td><td class="nee">alleen de lijst</td></tr>
+          <tr><td>Vandaag in één blik</td><td class="ja">ja</td><td class="ja">ja</td><td class="ja">ja</td></tr>
+          <tr><td>Week en wachtend tegelijk zichtbaar</td><td>ingeklapt</td><td class="ja">ja</td><td class="nee">andere plek</td></tr>
+          <tr><td>Handelingen altijd zichtbaar</td><td>na klik op de taak</td><td>na klik op de kaart</td><td class="ja">ja, rechts</td></tr>
+          <tr><td>Datum verzetten</td><td>knop of sneltoets</td><td class="ja">slepen</td><td>knop "Morgen" of "Datum…"</td></tr>
+          <tr><td>Werk om te bouwen</td><td class="ja">minst</td><td>meer: slepen</td><td>meest: drie vlakken</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="advies">
+    <h2>Mijn keuze: A, met het detailvlak van C op een breed venster</h2>
+    <p>Je gebruikt Takenhub in een smal paneel naast de terminal. Daar werkt alleen één kolom echt goed. Op een breed venster kan dezelfde kolom een detailvlak rechts krijgen, zodat afronden, wachten en datum altijd zichtbaar zijn zonder paneel dat over de lijst schuift.</p>
+    <p>B is het mooist voor een weekoverzicht, maar vraagt de meeste breedte en het meeste bouwwerk.</p>
+  </div>
+</div>
+
+<script>
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+function kies(tab){
+  tabs.forEach(t => {
+    const aan = t === tab;
+    t.setAttribute("aria-selected", aan ? "true" : "false");
+    document.getElementById(t.getAttribute("aria-controls")).hidden = !aan;
+  });
+  try{ localStorage.setItem("indeling", tab.id); }catch(e){}
+}
+tabs.forEach(t => t.addEventListener("click", () => kies(t)));
+try{ const eerder = document.getElementById(localStorage.getItem("indeling") || ""); if(eerder) kies(eerder); }catch(e){}
+document.addEventListener("click", (ev) => {
+  const taak = ev.target.closest(".taak");
+  if(taak) taak.classList.toggle("klaar");
+});
+</script>
+</body>
+</html>
